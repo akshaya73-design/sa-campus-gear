@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+
+S.A. CAMPUS GEAR
+
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO BANNER -->
+
+<section class="container mt-4">
+
+    <div class="banner">
+
+        <div class="banner-content">
+
+            <p>
+
+                NEW INSPIRATION 2026
+
+            </p>
+
+            <h1>
+
+                20% OFF ON NEW SEASON
+
+            </h1>
+
+            <button class="btn btn-dark">
+
+                Browse Collections
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CATEGORY SECTION -->
+
+<section class="container text-center mt-5">
+
+    <p class="text-secondary">
+
+        COLLECTIONS
+
+    </p>
+
+    <h2 class="fw-bold">
+
+        BROWSE OUR CATEGORIES
+
+    </h2>
+
+    <div class="row mt-5">
+
+        {% for category in categories %}
+
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+
+            <div class="category-card">
+
+                <a href="{% url 'category_products' category.slug %}">
+
+                    {% if category.category_image %}
+
+                    <img src="{{ category.category_image.url }}"
+                         alt="{{ category.category_name }}">
+
+                    {% else %}
+
+                    <img src="{% static 'images/bag.jpg' %}"
+                         alt="{{ category.category_name }}">
+
+                    {% endif %}
+
+                </a>
+
+                <h4>
+
+                    {{ category.category_name }}
+
+                </h4>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- FEATURED PRODUCTS -->
+
+<section class="container mt-5">
+
+    <h2 class="text-center mb-5">
+
+        FEATURED PRODUCTS
+
+    </h2>
+
+    <div class="row g-4">
+
+        {% for product in products %}
+
+        <div class="col-lg-3 col-md-6 col-12">
+
+            <div class="card product-card">
+
+                <a href="{% url 'product_detail' product.product_slug %}">
+
+                    <img src="{{ product.product_image.url }}"
+                         class="card-img-top"
+                         alt="{{ product.product_title }}">
+
+                </a>
+
+                <div class="card-body text-center d-flex flex-column">
+
+                    <h5>
+
+                        <a href="{% url 'product_detail' product.product_slug %}"
+                           class="text-dark text-decoration-none">
+
+                            {{ product.product_title }}
+
+                        </a>
+
+                    </h5>
+
+                    <p>
+
+                        ₹{{ product.price }}
+
+                    </p>
+
+                    <a href="{% url 'add_to_wishlist' product.id %}"
+                       class="btn btn-outline-danger w-100 mt-2">
+
+                            ❤️ Wishlist
+
+                    </a>
+
+                    <a href="{% url 'add_to_cart' product.id %}"
+                       class="btn btn-dark mt-auto">
+
+                        Add To Cart
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

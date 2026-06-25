@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Wishlist
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">
+
+        ❤️ My Wishlist
+
+    </h2>
+
+    {% if wishlist_items %}
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>
+                        Image
+                    </th>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th>
+                        Price
+                    </th>
+
+                    <th>
+                        Add To Cart
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in wishlist_items %}
+
+                <tr>
+
+                    <td width="120">
+
+                        <img src="{{ item.product.product_image.url }}"
+                             width="100"
+                             height="100"
+                             style="object-fit:contain;">
+
+                    </td>
+
+                    <td>
+
+                        {{ item.product.product_title }}
+
+                    </td>
+
+                    <td>
+
+                        ₹{{ item.product.price }}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'add_to_cart' item.product.id %}"
+                           class="btn btn-dark btn-sm">
+
+                            Add To Cart
+
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'remove_from_wishlist' item.id %}"
+                           class="btn btn-danger btn-sm">
+
+                            Remove
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-warning">
+
+        Your Wishlist Is Empty ❤️
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

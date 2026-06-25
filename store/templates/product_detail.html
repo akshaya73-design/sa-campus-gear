@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{{ product.product_title }}
+
+{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+
+<div class="container mt-4">
+
+    <p class="text-muted">
+
+        Home /
+        {{ product.product_category.category_name }}
+        /
+        {{ product.product_title }}
+
+    </p>
+
+</div>
+
+<!-- PRODUCT DETAILS -->
+
+<div class="container mt-5">
+
+    <div class="row align-items-center">
+
+        <!-- PRODUCT IMAGE -->
+
+        <div class="col-lg-6 mb-4">
+
+            <img src="{{ product.product_image.url }}"
+                 class="product-image"
+                 alt="{{ product.product_title }}">
+
+        </div>
+
+        <!-- PRODUCT INFO -->
+
+        <div class="col-lg-6">
+
+            <h1 class="product-title">
+
+                {{ product.product_title }}
+
+            </h1>
+
+            <div class="product-price">
+
+                ₹{{ product.price }}
+
+            </div>
+
+            <p>
+
+                <strong>SKU :</strong>
+                {{ product.sku }}
+
+            </p>
+
+            <p>
+
+                <strong>Category :</strong>
+                {{ product.product_category.category_name }}
+
+            </p>
+
+            <hr>
+
+            <p>
+
+                {{ product.short_description }}
+
+            </p>
+
+            <div class="d-flex gap-2 flex-wrap">
+
+                <a href="{% url 'add_to_cart' product.id %}"
+                   class="btn btn-dark add-cart-btn">
+
+                    Add To Cart
+
+                </a>
+
+                <button class="btn btn-outline-dark">
+
+                    ♥ Wishlist
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PRODUCT DESCRIPTION -->
+
+<div class="container mt-5">
+
+    <div class="card p-4 border-0 shadow-sm">
+
+        <h3 class="mb-4">
+
+            Product Description
+
+        </h3>
+
+        <p>
+
+            {{ product.detail_description }}
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- RELATED PRODUCTS -->
+
+{% if related_products %}
+
+<div class="container">
+
+    <h2 class="related-title">
+
+        Related Products
+
+    </h2>
+
+    <div class="row g-4">
+
+        {% for item in related_products %}
+
+        <div class="col-lg-3 col-md-6 col-12">
+
+            <div class="card product-card">
+
+                <a href="{% url 'product_detail' item.product_slug %}">
+
+                    <img src="{{ item.product_image.url }}"
+                         class="card-img-top"
+                         alt="{{ item.product_title }}">
+
+                </a>
+
+                <div class="card-body text-center d-flex flex-column">
+
+                    <h5>
+
+                        <a href="{% url 'product_detail' item.product_slug %}"
+                           class="text-dark text-decoration-none">
+
+                            {{ item.product_title }}
+
+                        </a>
+
+                    </h5>
+
+                    <p>
+
+                        ₹{{ item.price }}
+
+                    </p>
+
+                    <a href="{% url 'add_to_cart' item.id %}"
+                       class="btn btn-dark mt-auto">
+
+                        Add To Cart
+
+                    </a>
+
+                    <br><br>
+
+                    <a href="{% url 'add_to_wishlist' product.id %}"
+                       class="btn btn-outline-danger">
+
+                        ❤️ Add To Wishlist
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}
