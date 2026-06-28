@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-
 {{ product.product_title }}
-
 {% endblock %}
 
 {% block content %}
@@ -31,92 +29,170 @@
 
         <!-- PRODUCT IMAGE -->
 
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
 
             <img src="{{ product.product_image.url }}"
-                 class="product-image"
+                 class="img-fluid rounded shadow"
                  alt="{{ product.product_title }}">
 
         </div>
 
-        <!-- PRODUCT INFO -->
+    
 
-        <div class="col-lg-6">
+<!-- PRODUCT INFO -->
 
-            <h1 class="product-title">
+<div class="col-lg-6 col-md-6 col-12">
 
-                {{ product.product_title }}
+    <h1 class="product-title">
 
-            </h1>
+        {{ product.product_title }}
 
-            <div class="product-price">
+    </h1>
 
-                ₹{{ product.price }}
+    <div class="product-price mb-3">
 
-            </div>
+        ₹{{ product.price }}
 
-            <p>
+    </div>
 
-                <strong>SKU :</strong>
-                {{ product.sku }}
+    <p>
 
-            </p>
+        <strong>SKU :</strong>
 
-            <p>
+        {{ product.sku }}
 
-                <strong>Category :</strong>
-                {{ product.product_category.category_name }}
+    </p>
 
-            </p>
+    <p>
 
-            <hr>
+        <strong>Category :</strong>
 
-            <p>
+        {{ product.product_category.category_name }}
+
+    </p>
+
+    <p>
+
+        <strong>Stock :</strong>
+
+        {{ product.stock_quantity }}
+
+    </p>
+
+    {% if product.stock_quantity == 0 %}
+
+    <span class="badge bg-danger fs-6 mb-3">
+
+        ❌ Out Of Stock
+
+    </span>
+
+    {% elif product.stock_quantity <= 5 %}
+
+    <span class="badge bg-warning text-dark fs-6 mb-3">
+
+        ⚠ Only {{ product.stock_quantity }} Left
+
+    </span>
+
+    {% else %}
+
+    <span class="badge bg-success fs-6 mb-3">
+
+        🟢 In Stock
+
+    </span>
+
+    {% endif %}
+
+    <hr>
+
+    <p>
+
+        {{ product.short_description }}
+
+    </p>
+
+    <div class="d-grid gap-2 d-md-flex mt-4">
+
+        {% if product.can_add_to_cart %}
+
+        <a href="{% url 'add_to_cart' product.id %}"
+           class="btn btn-dark add-cart-btn">
+
+            🛒 Add To Cart
+
+        </a>
+
+        {% else %}
+
+        <button
+            class="btn btn-secondary add-cart-btn"
+            disabled>
+
+            ❌ Out Of Stock
+
+        </button>
+
+        {% endif %}
+
+        <a href="{% url 'add_to_wishlist' product.id %}"
+           class="btn btn-outline-danger">
+
+            ❤️ Wishlist
+
+        </a>
+
+    </div>
+
+    </div>
+</div>
+
+<!-- PRODUCT DESCRIPTION -->
+
+<div class="container mt-5 mb-5">
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-dark text-white">
+
+            <h3 class="mb-0">
+
+                Product Description
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+
+                Short Description
+
+            </h5>
+
+            <p class="text-muted">
 
                 {{ product.short_description }}
 
             </p>
 
-            <div class="d-flex gap-2 flex-wrap">
+            <hr>
 
-                <a href="{% url 'add_to_cart' product.id %}"
-                   class="btn btn-dark add-cart-btn">
+            <h5 class="mb-3">
 
-                    Add To Cart
+                Detailed Description
 
-                </a>
+            </h5>
 
-                <button class="btn btn-outline-dark">
+            <p class="text-muted">
 
-                    ♥ Wishlist
+                {{ product.detail_description }}
 
-                </button>
-
-            </div>
+            </p>
 
         </div>
-
-    </div>
-
-</div>
-
-<!-- PRODUCT DESCRIPTION -->
-
-<div class="container mt-5">
-
-    <div class="card p-4 border-0 shadow-sm">
-
-        <h3 class="mb-4">
-
-            Product Description
-
-        </h3>
-
-        <p>
-
-            {{ product.detail_description }}
-
-        </p>
 
     </div>
 
@@ -126,36 +202,37 @@
 
 {% if related_products %}
 
-<div class="container">
+<div class="container mb-5">
 
-    <h2 class="related-title">
+    <h2 class="mb-4">
 
         Related Products
 
     </h2>
 
-    <div class="row g-4">
+    <div class="row">
 
         {% for item in related_products %}
 
-        <div class="col-lg-3 col-md-6 col-12">
+  <div class="col-lg-3 col-md-6 col-6 mb-4">
 
-            <div class="card product-card">
+            <div class="card h-100 shadow-sm">
 
                 <a href="{% url 'product_detail' item.product_slug %}">
 
                     <img src="{{ item.product_image.url }}"
                          class="card-img-top"
-                         alt="{{ item.product_title }}">
+                         alt="{{ item.product_title }}"
+                         style="height:250px; object-fit:cover;">
 
                 </a>
 
-                <div class="card-body text-center d-flex flex-column">
+                <div class="card-body d-flex flex-column">
 
                     <h5>
 
                         <a href="{% url 'product_detail' item.product_slug %}"
-                           class="text-dark text-decoration-none">
+                           class="text-decoration-none text-dark">
 
                             {{ item.product_title }}
 
@@ -163,25 +240,62 @@
 
                     </h5>
 
-                    <p>
+                    <p class="fw-bold text-primary">
 
                         ₹{{ item.price }}
 
                     </p>
 
+                    {% if item.stock_quantity == 0 %}
+
+                    <span class="badge bg-danger mb-2">
+
+                        ❌ Out Of Stock
+
+                    </span>
+
+                    {% elif item.stock_quantity <= 5 %}
+
+                    <span class="badge bg-warning text-dark mb-2">
+
+                        ⚠ Only {{ item.stock_quantity }} Left
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge bg-success mb-2">
+
+                        🟢 In Stock
+
+                    </span>
+
+                    {% endif %}
+
+                    {% if item.can_add_to_cart %}
+
                     <a href="{% url 'add_to_cart' item.id %}"
                        class="btn btn-dark mt-auto">
 
-                        Add To Cart
+                        🛒 Add To Cart
 
                     </a>
 
-                    <br><br>
+                    {% else %}
 
-                    <a href="{% url 'add_to_wishlist' product.id %}"
-                       class="btn btn-outline-danger">
+                    <button class="btn btn-secondary mt-auto"
+                            disabled>
 
-                        ❤️ Add To Wishlist
+                        ❌ Out Of Stock
+
+                    </button>
+
+                    {% endif %}
+
+                    <a href="{% url 'add_to_wishlist' item.id %}"
+                       class="btn btn-outline-danger mt-2">
+
+                        ❤️ Wishlist
 
                     </a>
 

@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Inventory Dashboard
+{% endblock %}
+
+{% block content %}
+
+<section class="bg-light py-5 mb-5">
+
+    <div class="container text-center">
+
+        <h1 class="fw-bold">
+            📊 Inventory Dashboard
+        </h1>
+
+        <p class="text-muted">
+            Inventory Management & Stock Monitoring
+        </p>
+
+    </div>
+
+</section>
+
+<div class="container mb-5">
+
+    <div class="row g-4">
+        <div class="card border-0 shadow mb-5">
+
+    <div class="card-header bg-danger text-white">
+
+        <h4 class="mb-0">
+            🚨 Smart Inventory Alerts
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if low_stock_products %}
+
+        <h5 class="text-warning">
+            ⚠ Low Stock Products
+        </h5>
+
+        <ul>
+
+            {% for product in low_stock_products %}
+
+            <li>
+
+                {{ product.product_title }}
+                ({{ product.stock_quantity }} Left)
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+        {% endif %}
+
+        {% if out_stock_products %}
+
+        <h5 class="text-danger mt-4">
+            ❌ Out Of Stock Products
+        </h5>
+
+        <ul>
+
+            {% for product in out_stock_products %}
+
+            <li>
+
+                {{ product.product_title }}
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+            <div class="card text-center shadow border-0">
+
+                <div class="card-body">
+
+                    <h5>Total Products</h5>
+
+                    <h2 class="text-primary">
+
+                        {{ total_products }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+            <div class="card text-center shadow border-0">
+
+                <div class="card-body">
+
+                    <h5>Total Categories</h5>
+
+                    <h2 class="text-info">
+
+                        {{ total_categories }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+    <a href="?status=stock" class="text-decoration-none">
+
+        <div class="card text-center shadow border-0">
+
+            <div class="card-body">
+
+                <h5 class="text-dark">In Stock</h5>
+
+                <h2 class="text-success">
+                    {{ in_stock }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </a>
+
+</div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+    <a href="?status=low" class="text-decoration-none">
+
+        <div class="card text-center shadow border-0">
+
+            <div class="card-body">
+
+                <h5 class="text-dark">Low Stock</h5>
+
+                <h2 class="text-warning">
+                    {{ low_stock }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </a>
+
+</div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+    <a href="?status=out" class="text-decoration-none">
+
+        <div class="card text-center shadow border-0">
+
+            <div class="card-body">
+
+                <h5 class="text-dark">Out Of Stock</h5>
+
+                <h2 class="text-danger">
+                    {{ out_of_stock }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </a>
+
+</div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+            <div class="card text-center shadow border-0">
+
+                <div class="card-body">
+
+                    <h5>Cart Items</h5>
+
+                    <h2>
+
+                        {{ cart_count }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+
+            <div class="card text-center shadow border-0">
+
+                <div class="card-body">
+
+                    <h5>Wishlist</h5>
+
+                    <h2>
+
+                        {{ wishlist_count }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="my-5">
+
+<div class="row align-items-center mb-4">
+
+    <div class="col-md-3">
+        <h3>📦 Inventory Management</h3>
+    </div>
+
+    <div class="col-md-6">
+
+        <form method="GET" class="d-flex">
+
+            <input
+                type="text"
+                name="search"
+                class="form-control me-2"
+                placeholder="🔍 Search Product..."
+                value="{{ search }}">
+
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="col-md-3 text-end">
+
+        <a href="{% url 'inventory_dashboard' %}"
+           class="btn btn-secondary">
+
+            Show All Products
+
+        </a>
+
+    </div>
+
+</div>
+
+<div class="table-responsive">
+
+    <table class="table table-bordered table-hover align-middle text-center">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>Image</th>
+
+                <th>Product</th>
+
+                <th>SKU</th>
+
+                <th>Category</th>
+
+                <th>Price</th>
+
+                <th>Stock</th>
+
+                <th>Status</th>
+
+                <th>Restock</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for product in products %}
+
+            <tr>
+
+                <td>
+
+                    <img src="{{ product.product_image.url }}"
+                         width="70"
+                         height="70"
+                         style="object-fit:cover;border-radius:8px;">
+
+                </td>
+
+                <td>
+
+                    {{ product.product_title }}
+
+                </td>
+
+                <td>
+
+                    {{ product.sku }}
+
+                </td>
+
+                <td>
+
+                    {{ product.product_category.category_name }}
+
+                </td>
+
+                <td>
+
+                    ₹{{ product.price }}
+
+                </td>
+
+                <td>
+
+                    {{ product.stock_quantity }}
+
+                </td>
+
+                <td>
+
+                    {% if product.stock_quantity == 0 %}
+
+                    <span class="badge bg-danger">
+                        ❌ Out Of Stock
+                    </span>
+
+                    {% elif product.stock_quantity <= 5 %}
+
+                    <span class="badge bg-warning text-dark">
+                        ⚠ Low Stock
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge bg-success">
+                        ✅ In Stock
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <form method="POST"
+                          action="{% url 'restock_product' product.id %}">
+
+                        {% csrf_token %}
+
+                        <div class="input-group">
+
+                           <input type="number"
+                                name="quantity"
+                                class="form-control"
+                                style="width:80px;"
+                                min="1"
+                                value="10">
+
+                            <button class="btn btn-success" type="submit">
+
+                                Restock
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+</div>
+
+
+{% endblock %}

@@ -48,7 +48,8 @@ class Product(models.Model):
     )
 
     sku = models.CharField(
-        max_length=100
+        max_length=100,
+        unique=True
     )
 
     short_description = models.TextField()
@@ -59,7 +60,15 @@ class Product(models.Model):
         upload_to='product/'
     )
 
-    price = models.IntegerField()
+    price = models.PositiveIntegerField()
+
+    stock_quantity = models.PositiveIntegerField(
+        default=10
+    )
+
+    sale_count = models.PositiveIntegerField(
+    default=0
+)
 
     product_category = models.ForeignKey(
         Category,
@@ -90,6 +99,33 @@ class Product(models.Model):
 
         super().save(*args, **kwargs)
 
+    @property
+    def stock_status(self):
+
+        if self.stock_quantity == 0:
+            return "Out Of Stock"
+
+        elif self.stock_quantity <= 5:
+            return "Low Stock"
+
+        return "In Stock"
+
+    @property
+    def stock_color(self):
+
+        if self.stock_quantity == 0:
+            return "danger"
+
+        elif self.stock_quantity <= 5:
+            return "warning"
+
+        return "success"
+
+    @property
+    def can_add_to_cart(self):
+
+        return self.stock_quantity > 0
+
     def __str__(self):
 
         return self.product_title
@@ -102,9 +138,13 @@ class Cart(models.Model):
         on_delete=models.CASCADE
     )
 
-    quantity = models.IntegerField(
+    quantity = models.PositiveIntegerField(
         default=1
     )
+
+    def subtotal(self):
+
+        return self.product.price * self.quantity
 
     def __str__(self):
 
@@ -125,3 +165,15 @@ class Wishlist(models.Model):
     def __str__(self):
 
         return self.product.product_title
+    
+class Activity(models.Model):
+
+    activity = models.CharField(max_length=255)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.activity
+
+    class Meta:
+        ordering = ["-created_at"]

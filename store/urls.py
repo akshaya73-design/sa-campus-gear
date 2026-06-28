@@ -73,4 +73,30 @@ urlpatterns = [
         name='remove_from_wishlist'
     ),
 
+    # =========================
+    # CHECKOUT
+    # =========================
+
+    path(
+        'checkout/',
+        views.checkout,
+        name='checkout'
+    ),
+
+    # =========================
+    # INVENTORY DASHBOARD
+    # =========================
+
+    path(
+        'inventory-dashboard/',
+        views.inventory_dashboard,
+        name='inventory_dashboard'
+    ),
+
+    path(
+    "restock/<int:product_id>/",
+    views.restock_product,
+    name="restock_product"
+),
+
 ]

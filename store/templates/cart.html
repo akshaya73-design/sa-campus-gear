@@ -92,10 +92,9 @@ Shopping Cart
 
                     <td width="120">
 
-                        <img src="{{ item.product.product_image.url }}"
-                             width="100"
-                             height="100"
-                             style="object-fit:cover; border-radius:8px;">
+                         <img src="{{ item.product.product_image.url }}"
+                            class="img-fluid rounded"
+                            style="width:80px;height:80px;object-fit:contain;">
 
                     </td>
 
@@ -125,6 +124,33 @@ Shopping Cart
                             {{ item.quantity }}
 
                         </span>
+                        <br><br>
+
+{% if item.product.stock_quantity == 0 %}
+
+<span class="badge bg-danger">
+
+    Out Of Stock
+
+</span>
+
+{% elif item.product.stock_quantity <= 5 %}
+
+<span class="badge bg-warning text-dark">
+
+    Only {{ item.product.stock_quantity }} Left
+
+</span>
+
+{% else %}
+
+<span class="badge bg-success">
+
+    In Stock
+
+</span>
+
+{% endif %}
 
                         <a href="{% url 'increase_quantity' item.id %}"
                            class="btn btn-outline-dark btn-sm">
@@ -146,7 +172,7 @@ Shopping Cart
                         <a href="{% url 'remove_from_cart' item.id %}"
                            class="btn btn-danger btn-sm">
 
-                            Remove
+                            🗑 Remove
 
                         </a>
 
@@ -164,30 +190,36 @@ Shopping Cart
 
     <div class="row mt-4">
 
-        <div class="col-md-6">
+        <div class="col-12 col-md-6 mb-3">
 
-            <a href="{% url 'home' %}"
-               class="btn btn-outline-dark">
+           <a href="{{ request.session.continue_url|default:'/' }}"
+                 class="btn btn-outline-dark">
 
-                Continue Shopping
+                 ← Continue Shopping
 
             </a>
 
         </div>
+<div class="col-12 col-md-6 text-center text-md-end">
 
-        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <h4 class="fw-bold">
 
-            <h3>
+    Grand Total
 
-                Total : ₹{{ total }}
+</h4>
 
-            </h3>
+<h2 class="text-success">
 
-            <button class="btn btn-dark mt-2">
+    ₹{{ total }}
 
-                Proceed To Checkout
+</h2>
 
-            </button>
+           <a href="{% url 'checkout' %}"
+   class="btn btn-dark mt-2">
+
+    Proceed To Checkout →
+
+</a>
 
         </div>
 
@@ -199,7 +231,7 @@ Shopping Cart
 
         <h3>
 
-            Your Cart Is Empty 🛒
+            🛒 Your Shopping Cart Is Empty
 
         </h3>
 
