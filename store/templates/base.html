@@ -119,6 +119,31 @@
 
             <!-- RIGHT MENU -->
 
+           {% if request.resolver_match.url_name != 'inventory_dashboard' and request.resolver_match.url_name != 'inventory_report' %}
+
+                <form method="GET"
+                    action="{% url 'home' %}"
+                    class="d-flex custom-search me-3">
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control form-control-sm"
+                        placeholder="Search Products..."
+                        value="{{ request.GET.search }}">
+
+                        <button
+                            class="btn btn-dark btn-sm ms-2"
+                            type="submit">
+
+                            🔍
+
+                        </button>
+
+                    </form>
+
+            {% endif %}
+
            <div class="right-menu">
 
     <a href="{% url 'cart' %}" class="nav-icon">

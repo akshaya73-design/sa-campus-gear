@@ -108,6 +108,18 @@ S.A. CAMPUS GEAR
 
     </h2>
 
+    {% if search %}
+
+<h4 class="mb-4">
+
+    🔍 Search Result :
+
+    "{{ search }}"
+
+</h4>
+
+{% endif %}
+
     <div class="row g-4">
 
         {% for product in products %}
@@ -164,6 +176,22 @@ S.A. CAMPUS GEAR
         </div>
 
         {% endfor %}
+
+        {% if not products %}
+
+            <div class="text-center py-5">
+
+                <h3>😔 No Products Found</h3>
+
+                <p class="text-muted">
+
+                        Try another keyword.
+
+                </p>
+
+            </div>
+
+        {% endif %}
 
     </div>
 

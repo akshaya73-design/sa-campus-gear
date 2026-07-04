@@ -5,23 +5,51 @@ from django.contrib import messages
 from .models import Product, Category, Cart, Wishlist, Activity
 from django.views.decorators.http import require_POST
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Q
 
 
 def home(request):
+
     categories = Category.objects.filter(is_active=True)
-    products = Product.objects.filter(is_active=True, is_featured=True)
+
+    products = Product.objects.filter(
+        is_active=True,
+        is_featured=True
+    )
 
     search = request.GET.get("search")
+
     if search:
-        products = products.filter(product_title__icontains=search)
+
+        products = Product.objects.filter(
+
+            Q(product_title__icontains=search) |
+            Q(short_description__icontains=search) |
+            Q(sku__icontains=search),
+
+            is_active=True
+
+        )
 
     context = {
+
         "categories": categories,
+
         "products": products,
+
+        "search": search,
+
         "cart_count": Cart.objects.count(),
+
         "wishlist_count": Wishlist.objects.count(),
+
     }
-    return render(request,"home.html",context)
+
+    return render(
+        request,
+        "home.html",
+        context
+    )
 
 def category_products(request, slug):
 
